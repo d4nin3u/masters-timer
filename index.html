@@ -1,24 +1,33 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<meta charset="UTF-8">
-<title>Masters countdown</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="">
-<style>
-</style>
-<script src="masters.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <title>Masters countdown</title>
+  <link href="style.css" rel="stylesheet" />
+  <script src="masters.js"></script>
+</head>
 <body>
-
-<select name="players" id="players">
-  <option value="jago">jago</option>
-  <option value="qlex">qlex</option>
-  <option value="freakybyte">freakybyte</option>
-  <option value="steadshot">steadshot</option>
-</select> 
-<!-- javascript onchange for the dropdown to put the time into the input field-->
-<input type="time">
-<!-- figure out the time format -->
-
-<!-- label with timer, newline, repeat-->
+<form id="add-player" action="javascript:addPlayerButtonClick()">
+  <label for="player-name">Player Name:</label>
+  <input type="text" id="player-name" name="player-name">
+  <br>
+  <label for="player-time">Player Time:</label>
+  <input type="number" min="1" max="13" step="1" id="player-time-minutes" name="player-time-minutes">
+  <label>:</label>
+  <input type="number" min="0" max="59" step="1" id="player-time-seconds" name="player-time-seconds">
+  <br>
+  <input name="add-button" type="submit" value="Add Player">
+  <input name="reset-button" type="reset" value="Reset Form">
+  <br>
+</form>
+<br>
+<br>
+<table id="masters-table">
+</table>
+<br>
+<button id="countdown-button" type="button" onclick="countdownButtonClick()">Start</button>
+<label>Time since start:</label>
+<label id="global-timer">00:00</label>
+<br>
 </body>
-</html> 
+</html>
