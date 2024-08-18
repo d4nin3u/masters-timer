@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Masters Countdown</title>
+  <link href="style.css" rel="stylesheet" />
+</head>
+
+<body>
+  <form id="add-player">
+    <label for="player-name">Player Name:</label>
+    <input type="text" id="player-name" name="player-name" required>
+    <br>
+    <label for="player-time">Player Time:</label>
+    <input type="number" min="0" max="15" step="1" id="player-time-minutes" name="player-time-minutes" placeholder="00">
+    <label>:</label>
+    <input type="number" min="0" max="59" step="1" id="player-time-seconds" name="player-time-seconds" placeholder="00">
+    <label>:</label>
+    <input type="number" min="0" max="99" step="1" id="player-time-subseconds" name="player-time-subseconds" placeholder="00">
+    <br>
+    <button type="submit" id="add-button">Add Player</button>
+    <button type="reset" id="reset-button">Reset Form</button>
+    <br>
+  </form>
+  <br>
+  <button id="countdown-button" type="button">Start</button>
+  <br>
+  <label>Time since start:</label>
+  <label id="global-timer">00:00.00</label>
+  <table id="masters-table">
+  </table>
+  <br>
+  <label>Inactive players</label>
+  <table id="inactive-table"></table>
+
+  <!-- Move the script reference here -->
+  <script src="masters.js"></script>
+</body>
+</html>
