@@ -1,6 +1,5 @@
 // Global Constants
 const COUNTDOWN_OFFSET = 5000; // Pre-race countdown in ms
-const TABLE_HEADERS = ['+/-', 'Name', 'Time', 'Countdown'];
 
 // HTML element IDs
 const INACTIVE_TABLE_ID = 'inactive-table';
@@ -24,6 +23,23 @@ class State {
     inactivePlayers: Map<string, Player> = new Map();
     countdown_started: boolean = false;
     start_time: number = 0; // in milliseconds
+
+    saveToSessionStorage(): void {
+        const stateData = {
+            activePlayers: Array.from(this.activePlayers.entries()).map(([n, player]) => ({ n, ...player })),
+            inactivePlayers: Array.from(this.inactivePlayers.entries()).map(([n, player]) => ({ n, ...player }))
+        };
+        sessionStorage.setItem('state', JSON.stringify(stateData));
+    }
+
+    loadFromSessionStorage(): void {
+        const stateData = sessionStorage.getItem('state');
+        if (stateData) {
+            const { activePlayers, inactivePlayers } = JSON.parse(stateData);
+            this.activePlayers = new Map(activePlayers.map((p: any) => [p.name, new Player(p.name, p.time)]));
+            this.inactivePlayers = new Map(inactivePlayers.map((p: any) => [p.name, new Player(p.name, p.time)]));
+        }
+    }
 }
 
 const global_state = new State();
@@ -49,38 +65,62 @@ function createTableHeader(table: HTMLTableElement): void {
     const header = table.createTHead();
     const headerRow = header.insertRow(0);
 
-    TABLE_HEADERS.forEach(headerText => {
-        const th = document.createElement('th');
-        th.textContent = headerText;
-        headerRow.appendChild(th);
-    });
+    if (table.id === INACTIVE_TABLE_ID) {
+        ['+/-', 'Name', 'Time', 'Actions'].forEach(headerText => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            headerRow.appendChild(th);
+        });
+    } else if (table.id === MASTERS_TABLE_ID) {
+        ['+/-', 'Name', 'Time', 'Countdown'].forEach(headerText => {
+            const th = document.createElement('th');
+            th.textContent = headerText;
+            headerRow.appendChild(th);
+        });
+    }
 }
 
 function addRowToTable(table: HTMLTableElement, player: Player, index: number) {
     const row = table.insertRow();
+
+    // Action cell
     const actionCell = row.insertCell(0);
 
     if (table.id === INACTIVE_TABLE_ID) {
+        // Inactive Table: Add button to move to active and delete button
+        // Add button
         const addButton = document.createElement('button');
         addButton.textContent = "+";
         addButton.onclick = () => movePlayerToActive(player);
         actionCell.appendChild(addButton);
-    }
-
-    if (table.id === MASTERS_TABLE_ID) {
+    } else if (table.id === MASTERS_TABLE_ID) {
+        // Active Table: Remove button to move to inactive and countdown display
+        // Remove button
         const removeButton = document.createElement('button');
         removeButton.textContent = "-";
         removeButton.onclick = () => movePlayerToInactive(player);
         actionCell.appendChild(removeButton);
     }
 
+    // Common player details
     row.insertCell(1).textContent = player.name;
     row.insertCell(2).textContent = timeToString(player.time);
 
-    const countdownCell = row.insertCell(3);
-    countdownCell.id = `countdown-${index}`;
-    countdownCell.textContent = timeToString(player.countdown);
+    if (table.id === INACTIVE_TABLE_ID) {
+        // Delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = "Delete";
+        deleteButton.onclick = () => deletePlayerFromInactive(player);
+        const deleteCell = row.insertCell(3);
+        deleteCell.appendChild(deleteButton);
+    } else if (table.id === MASTERS_TABLE_ID){
+        // Countdown display
+        const countdownCell = row.insertCell(3);
+        countdownCell.id = `countdown-${index}`;
+        countdownCell.textContent = timeToString(player.countdown);
+    }
 }
+
 
 function refreshTable(tableId: string, players: Player[]) {
     const table = document.getElementById(tableId) as HTMLTableElement;
@@ -119,6 +159,7 @@ function addPlayerButtonClick(): void {
     const player = new Player(name, time);
 
     global_state.inactivePlayers.set(name, player);
+    global_state.saveToSessionStorage();
     refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
 }
 
@@ -129,6 +170,7 @@ function movePlayerToActive(player: Player) {
     const sortedPlayers = Array.from(global_state.activePlayers.values()).sort((a, b) => b.time - a.time);
     setCountdowns(sortedPlayers);
 
+    global_state.saveToSessionStorage();
     refreshTable(MASTERS_TABLE_ID, sortedPlayers);
     refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
 }
@@ -137,7 +179,14 @@ function movePlayerToInactive(player: Player): void {
     global_state.activePlayers.delete(player.name);
     global_state.inactivePlayers.set(player.name, player);
 
+    global_state.saveToSessionStorage();
     refreshTable(MASTERS_TABLE_ID, Array.from(global_state.activePlayers.values()));
+    refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
+}
+
+function deletePlayerFromInactive(player: Player): void {
+    global_state.inactivePlayers.delete(player.name);
+    global_state.saveToSessionStorage();
     refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
 }
 
@@ -168,6 +217,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const countdownButton = document.getElementById(COUNTDOWN_BUTTON_ID) as HTMLButtonElement;
     countdownButton.addEventListener('click', countdownButtonClick);
+
+    global_state.loadFromSessionStorage();
+    
+    refreshTable(MASTERS_TABLE_ID, Array.from(global_state.activePlayers.values()));
+    refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
 });
 
 // Call this every 33 milliseconds

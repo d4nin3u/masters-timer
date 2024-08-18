@@ -10,7 +10,7 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "./dist/js",
+    "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
