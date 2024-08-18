@@ -9,8 +9,8 @@
     "start": "pnpm run dev"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "d4nin3u",
+  "license": "MIT",
   "description": "",
   "devDependencies": {
     "typescript": "^5.0.0",
