@@ -13,7 +13,7 @@ const PLAYER_TIME_SUBSECONDS_INPUT_ID = 'player-time-subseconds';
 
 // Preset players
 const presets = [
-    { name: "K (aka Jago)", time: "09:11:41" },
+    { name: "Jago", time: "09:11:41" },
     { name: "d4nin3u", time: "09:28:40" },
     { name: "Qlex", time: "09:35:30" },
     { name: "steadshot", time: "10:08:31" },
