@@ -9,13 +9,14 @@ class State {
 }
 
 class Player {
-    countdown: number = 0; // in seconds
+    countdown: number = 0; // in milliseconds
 
-    constructor(public name: string, public time: number) {}
+    constructor(public name: string, public time: number) { }
 }
 
 const MASTERS_TABLE_NAME = "masters-table";
 const INACTIVE_TABLE_NAME = "inactive-table";
+const COUNTDOWN_OFFSET = 5000;
 
 /* Globals */
 const global_state = new State();
@@ -25,8 +26,9 @@ function addPlayerButtonClick(): void {
     const name = (document.getElementById("player-name") as HTMLInputElement).value;
     const time_m = (document.getElementById("player-time-minutes") as HTMLInputElement).value;
     const time_s = (document.getElementById("player-time-seconds") as HTMLInputElement).value;
+    const time_ms = (document.getElementById("player-time-subseconds") as HTMLInputElement).value;
 
-    const time = getInt(time_m) * 60 + getInt(time_s);
+    const time = (getInt(time_m) * 60 * 1000) + (getInt(time_s) * 1000) + getInt(time_ms);
     const player = new Player(name, time);
 
     global_state.inactivePlayers.set(name, player);
@@ -41,13 +43,13 @@ function getInt(value: string): number {
 function setCountdowns(players: Player[]): void {
     const [slowest_player] = players; // Get the slowest player (first in the sorted list)
     players.forEach(p => {
-        p.countdown = slowest_player.time - p.time + 5;
+        p.countdown = slowest_player.time - p.time + COUNTDOWN_OFFSET; // Add 5 seconds (5000 ms)
     });
 }
 
 function refreshCountdowns(players: Player[], elapsed_time: number) {
     const timer = document.getElementById("global-timer") as HTMLLabelElement;
-    timer.innerHTML = timeToString(elapsed_time);
+    timer.innerHTML = timeToString(elapsed_time - COUNTDOWN_OFFSET);
 
     players.forEach((p, i) => {
         const countdown = Math.max(0, p.countdown - elapsed_time);
@@ -66,10 +68,16 @@ function refreshTable(tableId: string, players: Player[]) {
 }
 
 function timeToString(time: number): string {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    const sign = time < 0 ? '-' : '';
+    const absTime = Math.abs(time);
+
+    const minutes = Math.floor(absTime / 60000);
+    const seconds = Math.floor((absTime % 60000) / 1000);
+    const hundredths = Math.floor((absTime % 1000) / 10);
+
+    return `${sign}${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${hundredths.toString().padStart(2, '0')}`;
 }
+
 
 function addRowToTable(table: HTMLTableElement, player: Player, index: number) {
     const row = table.insertRow();
@@ -106,7 +114,6 @@ function addRowToTable(table: HTMLTableElement, player: Player, index: number) {
     countdownCell.textContent = timeToString(player.countdown);
 }
 
-
 function movePlayerToActive(player: Player) {
     global_state.inactivePlayers.delete(player.name);
     global_state.activePlayers.set(player.name, player);
@@ -140,7 +147,7 @@ function createTableHeader(table: HTMLTableElement): void {
     });
 }
 
-function countdownButtonClick()  {
+function countdownButtonClick() {
     const players = Array.from(global_state.activePlayers.values());
     if (players.length === 0) {
         alert("Error: no players!");
@@ -157,13 +164,13 @@ function countdownButtonClick()  {
     }
 }
 
-// Call this every 1 second
+// Call this every 100 milliseconds
 setInterval(() => {
     if (global_state.countdown_started) {
-        const elapsed_time = Math.round((Date.now() - global_state.start_time) / 1000);
+        const elapsed_time = Date.now() - global_state.start_time;
         refreshCountdowns(Array.from(global_state.activePlayers.values()), elapsed_time);
     }
-}, 1000);
+}, 33);
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
