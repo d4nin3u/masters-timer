@@ -1,0 +1,19 @@
+{
+  "name": "masters-timer",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc && pnpm run copy-public",
+    "watch": "tsc --watch",
+    "copy-public": "copyfiles -u 1 public/**/* dist",
+    "dev": "pnpm run build && pnpm run watch",
+    "start": "pnpm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "copyfiles": "^2.4.1"
+  }
+}
