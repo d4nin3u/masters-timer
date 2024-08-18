@@ -4,7 +4,7 @@
   "scripts": {
     "build": "tsc && pnpm run copy-public",
     "watch": "tsc --watch",
-    "copy-public": "copyfiles -u 1 public/**/* dist",
+    "copy-public": "copyfiles -u 1 public/**/* docs",
     "dev": "pnpm run build && pnpm run watch",
     "start": "pnpm run dev"
   },
