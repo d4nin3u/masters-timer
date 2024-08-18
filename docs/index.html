@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Masters Countdown</title>
+  <title>Masters Timer</title>
   <link href="style.css" rel="stylesheet" />
 </head>
 
@@ -17,7 +17,8 @@
     <label>:</label>
     <input type="number" min="0" max="59" step="1" id="player-time-seconds" name="player-time-seconds" placeholder="00">
     <label>:</label>
-    <input type="number" min="0" max="99" step="1" id="player-time-subseconds" name="player-time-subseconds" placeholder="00">
+    <input type="number" min="0" max="99" step="1" id="player-time-subseconds" name="player-time-subseconds"
+      placeholder="00">
     <br>
     <button type="submit" id="add-button">Add Player</button>
     <button type="reset" id="reset-button">Reset Form</button>
@@ -33,8 +34,73 @@
   <br>
   <label>Inactive players</label>
   <table id="inactive-table"></table>
+  <br>
+  <label>Countdown cheat sheet:</label>
+  <table id="countdown-cheat-sheet">
+    <tr>
+      <th>Number</th>
+      <th>Japanese</th>
+      <th>Pronunciation</th>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>じゅう</td>
+      <td>Jū</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>きゅう</td>
+      <td>Kyū</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>はち</td>
+      <td>Hachi</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>なな</td>
+      <td>Nana</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>ろく</td>
+      <td>Roku</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>ご</td>
+      <td>Go</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>し</td>
+      <td>Shi</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>さん</td>
+      <td>San</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>に</td>
+      <td>Ni</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>いち</td>
+      <td>Ichi</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>スタート!</td>
+      <td>Sutāto!</td>
+    </tr>
+  </table>
 
-  <!-- Move the script reference here -->
+
   <script src="masters.js"></script>
 </body>
+
 </html>
