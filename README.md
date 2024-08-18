@@ -1,6 +1,9 @@
 # TGM Masters Timer
-A ChatGPT fuelled "tool" to run a masters-style tournament. If you don't know what that means you definitely don't need this.
+A ChatGPT fuelled "tool" to help run a masters-style TGM tournament. If you don't know what that means you probably don't need this.
 
 ## Usage
-Compile with typescript, or don't.
-Usually I wouldn't include the dist/ folder since that's build output but since this is acessible via github pages I didn't want to bother making a new branch I'll probably forget to maintain immediately.
+Go to [https://d4nin3u.github.io/masters-timer/](https://d4nin3u.github.io/masters-timer/).
+
+For development, make sure you have npm/pnpm and `npm run start`.
+
+`/docs` is the build output directory since that's what GitHub supports as a GitHub pages source dir.

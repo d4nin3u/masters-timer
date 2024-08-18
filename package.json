@@ -2,11 +2,11 @@
   "name": "masters-timer",
   "version": "1.0.0",
   "scripts": {
-    "build": "tsc && pnpm run copy-public",
+    "build": "tsc && npm run copy-public",
     "watch": "tsc --watch",
     "copy-public": "copyfiles -u 1 public/**/* docs",
-    "dev": "pnpm run build && pnpm run watch",
-    "start": "pnpm run dev"
+    "dev": "npm run build && npm run watch",
+    "start": "npm run dev"
   },
   "keywords": [],
   "author": "d4nin3u",
