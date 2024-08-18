@@ -3,33 +3,35 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Masters countdown</title>
+  <title>Masters Countdown</title>
   <link href="style.css" rel="stylesheet" />
-  <script src="js/masters.js"></script>
 </head>
 
 <body>
-  <form id="add-player" action="javascript:addPlayerButtonClick()">
+  <form id="add-player">
     <label for="player-name">Player Name:</label>
-    <input type="text" id="player-name" name="player-name">
+    <input type="text" id="player-name" name="player-name" required>
     <br>
     <label for="player-time">Player Time:</label>
-    <input type="number" min="1" max="13" step="1" id="player-time-minutes" name="player-time-minutes">
+    <input type="number" min="1" max="13" step="1" id="player-time-minutes" name="player-time-minutes" required>
     <label>:</label>
-    <input type="number" min="0" max="59" step="1" id="player-time-seconds" name="player-time-seconds">
+    <input type="number" min="0" max="59" step="1" id="player-time-seconds" name="player-time-seconds" required>
     <br>
-    <input name="add-button" type="submit" value="Add Player">
-    <input name="reset-button" type="reset" value="Reset Form">
+    <button type="submit" id="add-button">Add Player</button>
+    <button type="reset" id="reset-button">Reset Form</button>
     <br>
   </form>
   <br>
-  <button id="countdown-button" type="button" onclick="countdownButtonClick()">Start</button>
+  <button id="countdown-button" type="button">Start</button>
   <br>
   <label>Time since start:</label>
   <label id="global-timer">00:00</label>
   <table id="masters-table">
   </table>
   <br>
-  <table id="player-table"></table>
+  <table id="inactive-table"></table>
+
+  <!-- Move the script reference here -->
+  <script src="js/masters.js"></script>
 </body>
 </html>

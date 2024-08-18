@@ -41,3 +41,4 @@ build/
 *.npmrc
 *.yarnrc
 *.pnpmrc
+pnpm-lock.yaml
