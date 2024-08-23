@@ -228,6 +228,19 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
 });
 
+// Event listener for beforeunload to show a warning when the timer is running
+window.addEventListener('beforeunload', function (event) {
+    if (global_state.countdown_started) {
+        // Save the current state to session storage
+        global_state.saveToSessionStorage();
+
+        // Set the warning message
+        const message = "You have a countdown running. Are you sure you want to leave?";
+        event.returnValue = message; // Required for triggering the confirmation dialog
+        return message; // For compatibility with some browsers
+    }
+});
+
 // Call this every 33 milliseconds
 setInterval(() => {
     if (global_state.countdown_started) {
