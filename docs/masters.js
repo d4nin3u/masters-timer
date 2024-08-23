@@ -138,7 +138,12 @@ function refreshCountdowns(players, elapsed_time) {
 }
 // Player Management Functions
 function addPlayerButtonClick() {
-    const name = document.getElementById(PLAYER_NAME_INPUT_ID).value;
+    const name = document.getElementById(PLAYER_NAME_INPUT_ID).value.trim();
+    // Check if the player already exists
+    if (global_state.inactivePlayers.has(name) || global_state.activePlayers.has(name)) {
+        alert("Error: A player with this name already exists!");
+        return;
+    }
     const time_m = document.getElementById(PLAYER_TIME_MINUTES_INPUT_ID).value;
     const time_s = document.getElementById(PLAYER_TIME_SECONDS_INPUT_ID).value;
     const time_ms = document.getElementById(PLAYER_TIME_SUBSECONDS_INPUT_ID).value;
@@ -161,7 +166,7 @@ function movePlayerToInactive(player) {
     global_state.activePlayers.delete(player.name);
     global_state.inactivePlayers.set(player.name, player);
     global_state.saveToSessionStorage();
-    refreshTable(MASTERS_TABLE_ID, Array.from(global_state.activePlayers.values()));
+    refreshTable(MASTERS_TABLE_ID, global_state.sortedPlayerArray());
     refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
 }
 function deletePlayerFromInactive(player) {
@@ -171,8 +176,7 @@ function deletePlayerFromInactive(player) {
 }
 // Event Listeners and Initialization
 function countdownButtonClick() {
-    const players = Array.from(global_state.activePlayers.values());
-    if (players.length === 0) {
+    if (global_state.activePlayers.size === 0) {
         alert("Error: no players!");
         return;
     }
