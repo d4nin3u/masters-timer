@@ -24,6 +24,10 @@ class State {
     countdown_started: boolean = false;
     start_time: number = 0; // in milliseconds
 
+    sortedPlayerArray(): Array<Player> {
+        return Array.from(global_state.activePlayers.values()).sort((a, b) => b.time - a.time)
+    }
+
     saveToSessionStorage(): void {
         const stateData = {
             activePlayers: Array.from(this.activePlayers.entries()).map(([n, player]) => ({ n, ...player })),
@@ -167,7 +171,7 @@ function movePlayerToActive(player: Player) {
     global_state.inactivePlayers.delete(player.name);
     global_state.activePlayers.set(player.name, player);
 
-    const sortedPlayers = Array.from(global_state.activePlayers.values()).sort((a, b) => b.time - a.time);
+    const sortedPlayers = global_state.sortedPlayerArray();
     setCountdowns(sortedPlayers);
 
     global_state.saveToSessionStorage();
@@ -220,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     global_state.loadFromSessionStorage();
     
-    refreshTable(MASTERS_TABLE_ID, Array.from(global_state.activePlayers.values()));
+    refreshTable(MASTERS_TABLE_ID, global_state.sortedPlayerArray());
     refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
 });
 
@@ -228,6 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
 setInterval(() => {
     if (global_state.countdown_started) {
         const elapsed_time = Date.now() - global_state.start_time;
-        refreshCountdowns(Array.from(global_state.activePlayers.values()), elapsed_time);
+        refreshCountdowns(global_state.sortedPlayerArray(), elapsed_time);
     }
 }, 33);
