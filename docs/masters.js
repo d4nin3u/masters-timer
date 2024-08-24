@@ -114,6 +114,10 @@ function addRowToTable(table, player, index) {
         countdownCell.textContent = timeToString(player.countdown);
     }
 }
+function refreshTables() {
+    refreshTable(MASTERS_TABLE_ID, global_state.sortedPlayerArray());
+    refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
+}
 function refreshTable(tableId, players) {
     const table = document.getElementById(tableId);
     table.innerHTML = "";
@@ -121,7 +125,8 @@ function refreshTable(tableId, players) {
     players.forEach((p, i) => addRowToTable(table, p, i));
 }
 // Countdown Functions
-function setCountdowns(players) {
+function setCountdowns() {
+    const players = global_state.sortedPlayerArray();
     const [slowest_player] = players;
     players.forEach(p => {
         p.countdown = slowest_player.time - p.time + COUNTDOWN_OFFSET;
@@ -151,28 +156,25 @@ function addPlayerButtonClick() {
     const player = new Player(name, time);
     global_state.inactivePlayers.set(name, player);
     global_state.saveToSessionStorage();
-    refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
+    refreshTables();
 }
 function movePlayerToActive(player) {
     global_state.inactivePlayers.delete(player.name);
     global_state.activePlayers.set(player.name, player);
-    const sortedPlayers = global_state.sortedPlayerArray();
-    setCountdowns(sortedPlayers);
     global_state.saveToSessionStorage();
-    refreshTable(MASTERS_TABLE_ID, sortedPlayers);
-    refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
+    setCountdowns();
+    refreshTables();
 }
 function movePlayerToInactive(player) {
     global_state.activePlayers.delete(player.name);
     global_state.inactivePlayers.set(player.name, player);
     global_state.saveToSessionStorage();
-    refreshTable(MASTERS_TABLE_ID, global_state.sortedPlayerArray());
-    refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
+    refreshTables();
 }
 function deletePlayerFromInactive(player) {
     global_state.inactivePlayers.delete(player.name);
     global_state.saveToSessionStorage();
-    refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
+    refreshTables();
 }
 // Event Listeners and Initialization
 function countdownButtonClick() {
@@ -196,8 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const countdownButton = document.getElementById(COUNTDOWN_BUTTON_ID);
     countdownButton.addEventListener('click', countdownButtonClick);
     global_state.loadFromSessionStorage();
-    refreshTable(MASTERS_TABLE_ID, global_state.sortedPlayerArray());
-    refreshTable(INACTIVE_TABLE_ID, Array.from(global_state.inactivePlayers.values()));
+    setCountdowns();
+    refreshTables();
 });
 // Event listener for beforeunload to show a warning when the timer is running
 window.addEventListener('beforeunload', function (event) {
