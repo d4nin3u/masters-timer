@@ -23,6 +23,7 @@ class State {
     inactivePlayers: Map<string, Player> = new Map();
     countdown_started: boolean = false;
     start_time: number = 0; // in milliseconds
+    confirm_stop: boolean = false; // Safe mode flag
 
     sortedPlayerArray(): Array<Player> {
         return Array.from(global_state.activePlayers.values()).sort((a, b) => b.time - a.time)
@@ -31,7 +32,8 @@ class State {
     saveToSessionStorage(): void {
         const stateData = {
             activePlayers: Array.from(this.activePlayers.entries()).map(([n, player]) => ({ n, ...player })),
-            inactivePlayers: Array.from(this.inactivePlayers.entries()).map(([n, player]) => ({ n, ...player }))
+            inactivePlayers: Array.from(this.inactivePlayers.entries()).map(([n, player]) => ({ n, ...player })),
+            safe_mode: this.confirm_stop // Save safe mode state
         };
         sessionStorage.setItem('state', JSON.stringify(stateData));
     }
@@ -39,12 +41,14 @@ class State {
     loadFromSessionStorage(): void {
         const stateData = sessionStorage.getItem('state');
         if (stateData) {
-            const { activePlayers, inactivePlayers } = JSON.parse(stateData);
+            const { activePlayers, inactivePlayers, safe_mode } = JSON.parse(stateData);
             this.activePlayers = new Map(activePlayers.map((p: any) => [p.name, new Player(p.name, p.time)]));
             this.inactivePlayers = new Map(inactivePlayers.map((p: any) => [p.name, new Player(p.name, p.time)]));
+            this.confirm_stop = safe_mode || false; // Load safe mode state
         }
     }
 }
+
 
 const global_state = new State();
 
@@ -209,7 +213,14 @@ function countdownButtonClick() {
     if (global_state.activePlayers.size === 0) {
         alert("Error: no players!");
         return;
-    }    
+    }
+
+    if (global_state.countdown_started && global_state.confirm_stop) {
+        const confirmation = confirm("Are you sure you want to stop the countdown?");
+        if (!confirmation) {
+            return; // If the user cancels, do nothing
+        }
+    }
 
     global_state.countdown_started = !global_state.countdown_started;
 
@@ -221,6 +232,7 @@ function countdownButtonClick() {
     }
 }
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('add-player') as HTMLFormElement;
     form.addEventListener('submit', (event) => {
@@ -230,10 +242,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const countdownButton = document.getElementById(COUNTDOWN_BUTTON_ID) as HTMLButtonElement;
     countdownButton.addEventListener('click', countdownButtonClick);
+
+    const safeModeCheckbox = document.getElementById('confirm-stop') as HTMLInputElement;
+    safeModeCheckbox.checked = global_state.confirm_stop; // Set the checkbox state based on global_state
+    safeModeCheckbox.addEventListener('change', (event) => {
+        global_state.confirm_stop = (event.target as HTMLInputElement).checked;
+        global_state.saveToSessionStorage(); // Save state when checkbox is toggled
+    });
+
     global_state.loadFromSessionStorage();
     setCountdowns();
     refreshTables();
 });
+
 
 // Event listener for beforeunload to show a warning when the timer is running
 window.addEventListener('beforeunload', function (event) {
