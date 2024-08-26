@@ -11,10 +11,23 @@ const PLAYER_TIME_MINUTES_INPUT_ID = 'player-time-minutes';
 const PLAYER_TIME_SECONDS_INPUT_ID = 'player-time-seconds';
 const PLAYER_TIME_SUBSECONDS_INPUT_ID = 'player-time-subseconds';
 
+// Preset players
+const presets = [
+    { name: "K (aka Jago)", time: "09:11:41" },
+    { name: "d4nin3u", time: "09:28:40" },
+    { name: "Qlex", time: "09:35:30" },
+    { name: "steadshot", time: "10:08:31" },
+    { name: "nebbii", time: "10:13:36" },
+    { name: "shapeless", time: "10:26:63" },
+    { name: "FreakyByte", time: "11:10:40" },
+    { name: "Muf", time: "11:41:23" },
+    { name: "TGGC", time: "12:23:63" },
+    { name: "Tomek", time: "12:47:21" }
+];
+
 // Classes
 class Player {
     countdown: number = 0; // in milliseconds
-
     constructor(public name: string, public time: number) { }
 }
 
@@ -188,6 +201,27 @@ function addPlayerButtonClick(): void {
     refreshTables();
 }
 
+function timeStringToMilliseconds(time: string): number {
+    const [minutes, seconds, hundredths] = time.split(':').map(Number);
+    return (minutes * 60 * 1000) + (seconds * 1000) + (hundredths * 10);
+}
+
+
+function addPresetPlayer(name: string, timeString: string): void {
+    const time = timeStringToMilliseconds(timeString);
+
+    // Check if the player already exists
+    if (global_state.inactivePlayers.has(name) || global_state.activePlayers.has(name)) {
+        alert("Error: A player with this name already exists!");
+        return;
+    }
+
+    const player = new Player(name, time);
+    global_state.inactivePlayers.set(name, player);
+    global_state.saveToSessionStorage();
+    refreshTables();
+}
+
 
 function movePlayerToActive(player: Player) {
     global_state.inactivePlayers.delete(player.name);
@@ -239,6 +273,32 @@ function countdownButtonClick() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    const presetList = document.getElementById('preset-list') as HTMLSelectElement;
+    presets.forEach(preset => {
+        const option = document.createElement('option');
+        option.value = preset.name;
+        option.textContent = `${preset.name} (${preset.time})`;
+        presetList.appendChild(option);
+    });
+
+    presetList.addEventListener('change', () => {
+        const selectedPlayer = presets.find(p => p.name === presetList.value);
+        if (selectedPlayer) {
+            addPresetPlayer(selectedPlayer.name, selectedPlayer.time);
+        }
+    });
+
+    const addAllButton = document.getElementById('add-all-button') as HTMLButtonElement;
+    addAllButton.addEventListener('click', () => {
+        for (const player of presets) {
+            if (global_state.inactivePlayers.has(player.name) || global_state.activePlayers.has(player.name)) {
+                alert(`Error: Player "${player.name}" already exists! Aborting add all`);
+                break;
+            }
+            addPresetPlayer(player.name, player.time);
+        }
+    });
+
     const form = document.getElementById('add-player') as HTMLFormElement;
     form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -259,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setCountdowns();
     refreshTables();
 });
+
 
 
 // Event listener for beforeunload to show a warning when the timer is running

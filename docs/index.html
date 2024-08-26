@@ -22,7 +22,16 @@
     <br>
     <button type="submit" id="add-button">Add Player</button>
     <button type="reset" id="reset-button">Reset Form</button>
+    <br> 
     <br>
+    <div id="preset-container">
+      <label for="preset-list">Presets:</label>
+      <select id="preset-list">
+          <option value="" selected>---</option>
+      </select>
+      <button id="add-all-button" type="button">Add All</button>
+  </div>
+  
   </form>
   <br>
   <button id="countdown-button" type="button">Start</button> 
@@ -31,6 +40,7 @@
   <br>
   <label>Time since start:</label>
   <label id="global-timer">00:00.00</label>
+  <br>
   <table id="masters-table">
   </table>
   <br>
