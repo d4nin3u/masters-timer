@@ -1,4 +1,80 @@
+body {
+	font-family: Helvetica, Tahoma, Verdana, Arial;
+	font-size: 105%;
+	line-height: 1.7em;
+	background-color: #f0ece2;
+	color: #18191a;
+}
+
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
+	font-family: monospace;
+}
+
+table tr:nth-child(2n) {
+	background-color: #dfd3c3;
+}
+
+select, input {
+	background-color: #f0ece2;
+	font-family: monospace;
+	font-size: 110%;
+}
+
+table#masters-table tr:nth-child(1) th, table#inactive-table tr:nth-child(1) th, table#countdown-cheat-sheet tr:nth-child(1) th {
+	font-family: Helvetica, Tahoma, Verdana, Arial;
+}
+
+table#countdown-cheat-sheet td {
+	font-family: Helvetica, Tahoma, Verdana, Arial;
+}
+
+table#masters-table td, table#masters-table th, 
+table#inactive-table td, table#inactive-table th,
+table#countdown-cheat-sheet td, table#countdown-cheat-sheet th {
+	padding: 0 8px;
+}
+
+#global-timer {
+	font-weight: bold;
+}
+
+#countdown-button {
+	margin-right: 20px;	
+}
+
+#global-timer::before {
+   content: " ";
+   position: absolute;
+   width: 40px;
+   height: 27px;
+   margin-left: 150px;
+   z-index: -1;
+   background-repeat: no-repeat;
+   background-image: url("data:image/svg+xml;utf8,<svg width=\"37.932358\" height=\"25.387726\" viewBox=\"0 0 10.036269 6.7171691\" version=\"1.1\" id=\"svg1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\"> <defs id=\"defs1\"> <linearGradient id=\"linearGradient97\"> <stop style=\"stop-color:%2333fcee;stop-opacity:1;\" offset=\"0\" id=\"stop97\" /> <stop style=\"stop-color:%2330c1c5;stop-opacity:1;\" offset=\"1\" id=\"stop98\" /> </linearGradient> <linearGradient xlink:href=\"%23linearGradient97\" id=\"linearGradient98\" x1=\"36.097088\" y1=\"25.955505\" x2=\"39.503597\" y2=\"25.955505\" gradientUnits=\"userSpaceOnUse\" gradientTransform=\"translate(0.02260962)\" /> <linearGradient xlink:href=\"%23linearGradient97\" id=\"linearGradient99\" gradientUnits=\"userSpaceOnUse\" x1=\"36.097088\" y1=\"25.955505\" x2=\"39.503597\" y2=\"25.955505\" gradientTransform=\"translate(3.3345903,-2.6087108e-4)\" /> <linearGradient xlink:href=\"%23linearGradient97\" id=\"linearGradient100\" gradientUnits=\"userSpaceOnUse\" x1=\"36.097088\" y1=\"25.955505\" x2=\"39.503597\" y2=\"25.955505\" gradientTransform=\"translate(6.6523634,-0.00102216)\" /> <linearGradient xlink:href=\"%23linearGradient97\" id=\"linearGradient101\" gradientUnits=\"userSpaceOnUse\" x1=\"36.097088\" y1=\"25.955505\" x2=\"39.503597\" y2=\"25.955505\" gradientTransform=\"translate(3.3417058,3.3096355)\" /> </defs> <g id=\"layer1\" transform=\"translate(-36.119698,-24.251226)\"> <rect style=\"mix-blend-mode:normal;fill:url(%23linearGradient98);stroke:%236e6e6e;stroke-width:0.0992185;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1\" id=\"rect1\" width=\"3.3072917\" height=\"3.3072917\" x=\"36.169308\" y=\"24.301859\" /> <rect style=\"mix-blend-mode:normal;fill:url(%23linearGradient99);fill-opacity:1;stroke:%236e6e6e;stroke-width:0.0992185;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1\" id=\"rect1-2\" width=\"3.3072917\" height=\"3.3072917\" x=\"39.481289\" y=\"24.301598\" /> <rect style=\"mix-blend-mode:normal;fill:url(%23linearGradient100);fill-opacity:1;stroke:%236e6e6e;stroke-width:0.0992185;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1\" id=\"rect1-1\" width=\"3.3072917\" height=\"3.3072917\" x=\"42.799065\" y=\"24.300837\" /> <rect style=\"mix-blend-mode:normal;fill:url(%23linearGradient101);fill-opacity:1;stroke:%236e6e6e;stroke-width:0.0992185;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1\" id=\"rect1-7\" width=\"3.3072917\" height=\"3.3072917\" x=\"39.488403\" y=\"27.611494\" /> </g> </svg>");
+   animation: tspin 2s infinite, fade_in 20s ease-in;
+   -webkit-animation-play-state: paused;
+   animation-play-state: paused;
+}
+
+#global-timer:hover::before {
+	-webkit-animation-play-state: running;
+    animation-play-state: running;
+}
+
+@keyframes tspin {
+	10% {transform: rotate(5deg);}
+	25% {transform: rotate(90deg);}
+	35% {transform: rotate(95deg);}
+	50% {transform: rotate(180deg);}
+	60% {transform: rotate(185deg);}
+	75% {transform: rotate(270deg);}
+	85% {transform: rotate(275deg);}
+	100% {transform: rotate(360deg);}
+}
+
+@keyframes fade_in {
+	from {opacity: 0;}
+    to {opacity: 1;}
 }
