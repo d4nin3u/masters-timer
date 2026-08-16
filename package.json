@@ -4,16 +4,17 @@
   "scripts": {
     "build": "tsc && npm run copy-public",
     "watch": "tsc --watch",
-    "copy-public": "copyfiles -u 1 public/**/* docs",
+    "copy-public": "node -e \"require('fs').cpSync('public','docs',{recursive:true})\"",
+    "clean": "node -e \"require('fs').rmSync('docs',{recursive:true,force:true})\"",
     "dev": "npm run build && npm run watch",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "serve": "npx serve docs"
   },
   "keywords": [],
   "author": "d4nin3u",
   "license": "MIT",
   "description": "",
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "copyfiles": "^2.4.1"
+    "typescript": "^7.0.2"
   }
 }

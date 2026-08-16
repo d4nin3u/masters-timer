@@ -1,0 +1,35 @@
+name: Build check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.7.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.16.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run clean && pnpm run build
+
+      - name: Fail if committed build output is out of date
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Committed docs/ is out of date with src/ and public/. Run 'pnpm run clean && pnpm run build' and commit the result."
+            git status --porcelain
+            git diff
+            exit 1
+          fi
